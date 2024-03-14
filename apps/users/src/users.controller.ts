@@ -14,7 +14,6 @@ export class UsersController {
 
   @MessagePattern('get_user')
   handleGetUser(@Payload('userId', ParseIntPipe) userId: number) {
-    console.log('get user');
     return this.usersService.getUser(userId);
   }
 }
