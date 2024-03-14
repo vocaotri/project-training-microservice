@@ -23,7 +23,7 @@ export class PaymentService implements OnModuleInit {
       });
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.authClient.subscribeToResponseOf('get_user');
   }
 }

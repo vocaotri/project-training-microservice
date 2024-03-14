@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(PaymentModule);
   const configService = app.get(ConfigService);
   const kafkaHost = 'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M');
+  const paymentPort = configService.get('PAYMENTS_PORT');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: {
@@ -20,5 +21,6 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
+  await app.listen(paymentPort || 3002);
 }
 bootstrap();

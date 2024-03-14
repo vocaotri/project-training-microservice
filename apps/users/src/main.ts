@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(UsersModule);
   const configService = app.get(ConfigService);
   const kafkaHost = 'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M');
+  const usersPort = configService.get('USERS_PORT');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: {
@@ -20,5 +21,6 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
+  await app.listen(usersPort || 3001);
 }
 bootstrap();
