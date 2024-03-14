@@ -12,6 +12,7 @@ export class UsersService {
   }
 
   getUser(id: number): User {
+    console.log('get user');
     return this.usersRepository.findOne(id);
   }
 }

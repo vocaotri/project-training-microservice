@@ -1,3 +1,4 @@
+import { KAFKA_CONFIG } from '@app/utils/contants';
 import { MakePaymentDto } from '@app/utils/dtos';
 import { User } from '@app/utils/entities';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
@@ -6,7 +7,8 @@ import { ClientKafka } from '@nestjs/microservices';
 @Injectable()
 export class PaymentService implements OnModuleInit {
   constructor(
-    @Inject('AUTH_MICROSERVICE') private readonly authClient: ClientKafka,
+    @Inject(KAFKA_CONFIG.AUTH_PROVIDER)
+    private readonly authClient: ClientKafka,
   ) {}
 
   processPayment(makePaymentDto: MakePaymentDto) {
@@ -21,7 +23,7 @@ export class PaymentService implements OnModuleInit {
       });
   }
 
-  onModuleInit() {
+  async onModuleInit() {
     this.authClient.subscribeToResponseOf('get_user');
   }
 }
