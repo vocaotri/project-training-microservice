@@ -9,7 +9,7 @@ export class UsersController {
 
   @EventPattern('create_user')
   handleUserCreate(@Payload(ValidationPipe) data: CreateUserDto) {
-    this.usersService.createUser(data);
+    return this.usersService.createUser1(data);
   }
 
   @MessagePattern('get_user')
