@@ -40,9 +40,12 @@ services:
     ports:
       - ${PLAINTEXT_HOST_PORT_M}:${PLAINTEXT_HOST_PORT}
       - ${KAFKA_JMX_PORT_M}:${KAFKA_JMX_PORT} # metrics
+    depends_on:
+      - zookeeper
     networks:
       - traning-network
   kafka-ui:
+    restart: always
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     environment:
@@ -52,6 +55,9 @@ services:
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry:${SCHEMAREGISTRY_PORT}
     ports:
       - ${KAFKA_UI_PORT_M}:${KAFKA_UI_PORT}
+    depends_on:
+      - kafka
+      - schemaregistry
     networks:
       - traning-network
   schemaregistry:
@@ -67,6 +73,8 @@ services:
       SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "http"
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+    depends_on:
+      - kafka
     networks:
       - traning-network
 networks:
