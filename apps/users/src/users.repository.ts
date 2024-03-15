@@ -21,4 +21,14 @@ export class UsersRepository {
       },
     });
   }
+
+  getUsers(take: number, skip: number, search: string) {
+    return this._userRepository.findAndCount({
+      where: {
+        name: search,
+      },
+      take,
+      skip,
+    });
+  }
 }
