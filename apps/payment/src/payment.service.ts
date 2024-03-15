@@ -3,6 +3,7 @@ import { MakePaymentDto } from '@app/utils/dtos';
 import { User } from '@app/utils/entities';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class PaymentService implements OnModuleInit {
@@ -11,16 +12,15 @@ export class PaymentService implements OnModuleInit {
     private readonly authClient: ClientKafka,
   ) {}
 
-  processPayment(makePaymentDto: MakePaymentDto) {
+  async processPayment(makePaymentDto: MakePaymentDto) {
     const { userId, amount } = makePaymentDto;
     console.log('process payment');
-    this.authClient
-      .send('get_user', JSON.stringify({ userId }))
-      .subscribe((user: User) => {
-        console.log(
-          `process payment for user ${user.name} - amount: ${amount}`,
-        );
-      });
+    const userRespone = this.authClient.send<User>(
+      'get_user',
+      JSON.stringify({ userId }),
+    );
+    const user = await lastValueFrom(userRespone);
+    console.log(`process payment for user ${user.name} - amount: ${amount}`);
   }
 
   onModuleInit() {
