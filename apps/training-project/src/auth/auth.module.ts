@@ -8,47 +8,27 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    // ClientsModule.registerAsync([
-    //   // {
-    //   //   name: KAFKA_CONFIG.AUTH_PROVIDER,
-    //   //   imports: [ConfigModule],
-    //   //   useFactory: async (configService: ConfigService) => ({
-    //   //     transport: Transport.KAFKA,
-    //   //     options: {
-    //   //       client: {
-    //   //         clientId: 'auth',
-    //   //         brokers: [
-    //   //           'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M'),
-    //   //         ],
-    //   //       },
-    //   //       // producerOnlyMode: true,
-    //   //       consumer: {
-    //   //         groupId: KAFKA_CONFIG.AUTH_CONSUMER,
-    //   //       },
-    //   //     },
-    //   //   }),
-    //   //   inject: [ConfigService],
-    //   // },
-    //   {
-    //     name: KAFKA_CONFIG.AUTH_PROVIDER,
-    //     imports: [ConfigModule],
-    //     useFactory: async (configService: ConfigService) => ({
-    //       transport: Transport.KAFKA,
-    //       options: {
-    //         client: {
-    //           clientId: 'auth',
-    //           brokers: [
-    //             'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M'),
-    //           ],
-    //         },
-    //         consumer: {
-    //           groupId: KAFKA_CONFIG.AUTH_CONSUMER,
-    //         },
-    //       },
-    //     }),
-    //     inject: [ConfigService],
-    //   },
-    // ]),
+    ClientsModule.registerAsync([
+      {
+        name: KAFKA_CONFIG.AUTH_PROVIDER,
+        imports: [ConfigModule],
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: 'auth',
+              brokers: [
+                'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M'),
+              ],
+            },
+            consumer: {
+              groupId: KAFKA_CONFIG.AUTH_CONSUMER,
+            },
+          },
+        }),
+        inject: [ConfigService],
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService],
