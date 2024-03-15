@@ -1,14 +1,24 @@
-import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { UsersRepository } from './users.repository';
 import { KAFKA_CONFIG } from '@app/utils/contants';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CryptoService } from '../config/crypto.service';
+import { TypeOrmConfigService } from '../config/typeorm-config.service';
+import { User } from './entities/user.entity';
+import { UsersController } from './users.controller';
+import { UsersRepository } from './users.repository';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([User]),
     ClientsModule.registerAsync([
       {
         name: KAFKA_CONFIG.AUTH_PROVIDER,
@@ -32,6 +42,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [UsersService, UsersRepository, CryptoService],
 })
 export class UsersModule {}

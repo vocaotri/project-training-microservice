@@ -1,17 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
 import { CreateUserDto } from '@app/utils/dtos';
+import { Injectable } from '@nestjs/common';
+import { CryptoService } from '../config/crypto.service';
+import { UsersRepository } from './users.repository';
 import { User } from '@app/utils/entities';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly cryptoService: CryptoService,
+  ) {}
 
-  createUser(data: CreateUserDto): void {
-    this.usersRepository.save(data);
+  async createUser(data: CreateUserDto): Promise<User> {
+    data = {
+      ...data,
+      password: await this.cryptoService.hashPassword(data.password),
+    };
+    const user = await this.usersRepository.save(data);
+    return user;
   }
 
-  getUser(id: number): User {
-    return this.usersRepository.findOne(id);
+  async getUser(id: number): Promise<User> {
+    const user = await this.usersRepository.findOne(id);
+    return user;
   }
 }

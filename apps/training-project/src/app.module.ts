@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PaymentModule } from './payment/payment.module';
-import { ConfigModule } from '@nestjs/config';
+import { TransformInterceptor } from '../utils/interceptors/transform.interceptor';
 
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, PaymentModule],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: TransformInterceptor,
+    },
+  ],
 })
 export class AppModule {}

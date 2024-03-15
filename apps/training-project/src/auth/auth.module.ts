@@ -21,7 +21,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
                 'localhost:' + configService.get('PLAINTEXT_HOST_PORT_M'),
               ],
             },
-            producerOnlyMode: true,
             consumer: {
               groupId: KAFKA_CONFIG.AUTH_CONSUMER,
             },
