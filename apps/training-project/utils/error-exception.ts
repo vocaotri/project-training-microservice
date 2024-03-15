@@ -1,10 +1,6 @@
 import { HttpException } from '@nestjs/common';
 
 export interface DefaultResponse {
-  data: any;
-}
-
-export interface ErrorException {
   data?: any;
   errorCode: string;
   message: string;
@@ -12,8 +8,8 @@ export interface ErrorException {
 }
 
 export function createErrorException(
-  dataError: ErrorException,
-): ErrorException {
+  dataError: DefaultResponse,
+): DefaultResponse {
   throw new HttpException(
     {
       data: dataError.data || {},

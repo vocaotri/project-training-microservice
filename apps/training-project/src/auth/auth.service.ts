@@ -50,7 +50,12 @@ export class AuthService {
     });
   }
 
+  async getUser(userId: number) {
+    return this.authClient.send<User>('get_user', JSON.stringify({ userId }));
+  }
+
   onModuleInit() {
     this.authClient.subscribeToResponseOf('create_user');
+    this.authClient.subscribeToResponseOf('get_user');
   }
 }

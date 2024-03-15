@@ -1,5 +1,5 @@
 import { CreateUserDto } from '@app/utils/dtos';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login.dto';
 import { GetUsersDto } from './dto/get-users.dto';
@@ -17,6 +17,11 @@ export class AuthController {
   @Post('sign-in')
   signIn(@Body() loginUserDto: LoginUserDto) {
     return this.authService.signIn(loginUserDto);
+  }
+
+  @Get('users/:id')
+  getUser(@Param('id') id: number) {
+    return this.authService.getUser(id);
   }
 
   @Get('users')
