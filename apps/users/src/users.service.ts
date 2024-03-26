@@ -1,8 +1,8 @@
-import { CreateUserDto } from '@app/utils/dtos';
+import { User } from '@app/utils/entities';
 import { Injectable } from '@nestjs/common';
 import { CryptoService } from '../config/crypto.service';
+import { _CreateUserDto } from '../dto/creat-user.dto';
 import { UsersRepository } from './users.repository';
-import { User } from '@app/utils/entities';
 
 @Injectable()
 export class UsersService {
@@ -11,7 +11,7 @@ export class UsersService {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async createUser(data: CreateUserDto): Promise<User> {
+  async createUser(data: _CreateUserDto): Promise<User> {
     data = {
       ...data,
       password: await this.cryptoService.hashPassword(data.password),
@@ -21,7 +21,16 @@ export class UsersService {
   }
 
   async getUser(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne(id);
+    const user = await this.usersRepository.findOne({
+      where: { id },
+    });
     return user;
+  }
+
+  async checkExisting(column: string, value: string) {
+    const userCount = await this.usersRepository.count({
+      where: { [column]: value },
+    });
+    return userCount > 0;
   }
 }

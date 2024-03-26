@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CryptoService } from '../config/crypto.service';
 import { TypeOrmConfigService } from '../config/typeorm-config.service';
+import { ExistsRule } from '../validation/exist-validate';
 import { User } from './entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersRepository } from './users.repository';
@@ -42,6 +43,7 @@ import { UsersService } from './users.service';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository, CryptoService],
+  providers: [UsersService, UsersRepository, CryptoService, ExistsRule],
+  exports: [UsersService],
 })
 export class UsersModule {}

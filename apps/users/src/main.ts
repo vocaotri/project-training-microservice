@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { UsersModule } from './users.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { KAFKA_CONFIG } from '@app/utils/contants';
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { useContainer } from 'class-validator';
+import { UsersModule } from './users.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(UsersModule);
@@ -21,6 +22,7 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
+  useContainer(app.select(UsersModule), { fallbackOnErrors: true });
   await app.listen(usersPort || 3001);
 }
 bootstrap();
