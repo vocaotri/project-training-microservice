@@ -14,7 +14,7 @@ export class PaymentService implements OnModuleInit {
 
   async processPayment(makePaymentDto: MakePaymentDto) {
     const { userId, amount } = makePaymentDto;
-    console.log('process payment');
+    console.log('process payment', userId);
     const userRespone = this.authClient.send<User>(
       'get_user',
       JSON.stringify({ userId }),
